@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 import warnings
+from pathlib import Path
 warnings.filterwarnings('ignore')
 
 from statsmodels.tsa.arima.model import ARIMA
@@ -83,10 +84,12 @@ def run_arima(series_values, order=(1, 1, 1), steps=FORECAST_STEPS):
 # ─────────────────────────────────────────────
 # Sidebar
 # ─────────────────────────────────────────────
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Earth_Eastern_Hemisphere.jpg/240px-Earth_Eastern_Hemisphere.jpg", width=120)
-st.sidebar.title("🌍 Climate & Economics 2050")
+_logo_path = Path(__file__).parent / "assets" / "logo.png"
+if _logo_path.exists():
+    st.sidebar.image(str(_logo_path), use_container_width=True)
+st.sidebar.title("🌍 Global Futures 2050")
 st.sidebar.markdown("---")
-st.sidebar.markdown("Explore historical data across tabs, and adjust policies directly in the **🔮 Forecast Dashboard** tab.")
+st.sidebar.markdown("Explore historical data across tabs, and adjust policies directly in the **🔮 Forecast** tab.")
 st.sidebar.markdown("---")
 st.sidebar.caption(f"Data covers 1990 – {latest_year} · {len(df):,} country-year records")
 
@@ -94,11 +97,11 @@ st.sidebar.caption(f"Data covers 1990 – {latest_year} · {len(df):,} country-y
 # Tabs
 # ─────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "🌍 Executive Dashboard",
-    "🌐 Country Comparison",
-    "🌡️ Climate Dashboard",
-    "💰 Economic Dashboard",
-    "🔮 Forecast Dashboard",
+    "🌍 Overview",
+    "🌐 Countries",
+    "🌡️ Climate",
+    "💰 Economics",
+    "🔮 Forecast",
 ])
 
 # ══════════════════════════════════════════════
