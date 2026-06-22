@@ -4,74 +4,69 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)
 ![XGBoost](https://img.shields.io/badge/Machine_Learning-XGBoost-orange.svg)
 ![ARIMA](https://img.shields.io/badge/Forecasting-ARIMA-green.svg)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black.svg)](#)
 
-## 📖 Overview
-**Climate Economics 2050** is an end-to-end Data Science and Machine Learning project that analyzes the macroeconomic drivers of global carbon emissions. By synthesizing over three decades of data from the **World Bank** and **Our World in Data (OWID)**, this project trains predictive models (Random Forest, XGBoost) and leverages Time-Series forecasting (ARIMA) to project global emissions out to the year 2050.
+## 📌 Executive Summary
+**Climate Economics 2050** provides a rigorous, data-driven perspective on the macroeconomic forces propelling global carbon emissions. Leveraging over 30 years of historical data from the World Bank and Our World in Data, this project deploys Machine Learning models (XGBoost) and advanced Time-Series Forecasting (ARIMA) to predict future emissions trajectories under various climate policy scenarios out to the year 2050. It bridges the gap between economic growth (GDP), energy consumption, and environmental impact.
 
-The project culminates in a fully interactive Streamlit dashboard allowing users to manipulate simulated climate policies (like Carbon Taxes and Renewable Investments) to visualize their compounding effects on the 2050 forecast.
+## 📊 Interactive Dashboard
+Explore the simulated future using our fully interactive Streamlit dashboard. Adjust macro-policy levers like Carbon Taxes, Renewable Investment, and Energy Efficiency to dynamically view the compound effect on 2050 projections.
 
----
+> **Note**: *Take screenshots of the local dashboard and place them in `docs/dashboard_overview.png` and `docs/forecast_scenario.png`.*
+> 
+> ![Dashboard Overview](docs/dashboard_overview.png)
+> ![Forecast Scenarios](docs/forecast_scenario.png)
 
-## 🏗️ Architecture & Features
-1. **Automated Data Engineering**: `src/data/ingestion.py` programmatically pulls, cleans, and merges API data from the World Bank with direct CSV downloads from OWID.
-2. **Exploratory Data Analysis**: Generates interactive geographic choropleth maps and correlation heatmaps to visualize the dataset.
-3. **Machine Learning Pipeline**: Trains and pits regression models against each other to dynamically determine the most mathematically significant drivers of emissions.
-4. **Time-Series Forecasting**: Uses Autoregressive Integrated Moving Average (ARIMA) to predict future trends.
-5. **Interactive Dashboard**: A robust Streamlit frontend to interact with the models.
+## 🏗️ Project Architecture
+The project architecture spans automated data ingestion, exploratory analytics, machine learning, and an interactive front-end.
 
----
+```mermaid
+graph TD
+    A[World Bank API] --> C(Data Ingestion Pipeline)
+    B[Our World in Data CSVs] --> C
+    C --> D{Cleaned & Merged Dataset}
+    D --> E[EDA & Statistical Correlation]
+    D --> F[XGBoost Models]
+    F --> G[Feature Importance Extraction]
+    D --> H[ARIMA Time-Series Forecasting]
+    H --> I[Streamlit Interactive Dashboard]
+    I --> J((Policy Scenario Modifiers))
+```
+
+## 🔬 Forecasting Methodology
+1. **Feature Extraction**: Using XGBoost, we isolate the most statistically significant drivers of carbon emissions.
+2. **Baseline Forecast**: Autoregressive Integrated Moving Average (ARIMA `(1,1,1)`) is applied to historical global trends to predict the business-as-usual trajectory to 2050.
+3. **Scenario Modeling**: Policy interventions (e.g., carbon tax, EV transition) are applied as compounding year-over-year percentage modifiers to the ARIMA baseline, simulating complex macroeconomic damping effects on carbon output.
+
+## 💡 Key Findings
+1. **The Decoupling Challenge**: Primary Energy Consumption remains the #1 driver of carbon emissions and is fundamentally tied to GDP growth. True absolute decoupling has yet to be achieved globally.
+2. **Business-as-Usual Crisis**: Without aggressive policy interventions, ARIMA models forecast a severe continued rise in global carbon output by 2050.
+3. **Compound Policy Impact**: Singular policies (like just a Carbon Tax) are insufficient. Only a combined, compounded approach (Renewable Investment + Efficiency + Carbon Tax) successfully flattens the 2050 emissions curve.
+4. **Energy Efficiency vs. Supply**: Investments in energy efficiency provide a faster reduction in the immediate curve compared to transitioning the energy supply alone, due to lag in infrastructure rollout.
 
 ## 🚀 Getting Started
 
-### Option 1: Local Installation (Python Environment)
-1. **Clone the repository** and navigate to the root directory.
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Run the Data Ingestion Pipeline** (Required to generate the local dataset):
-   ```bash
-   python src/data/ingestion.py
-   ```
-4. **Launch the Dashboard**:
-   ```bash
-   streamlit run src/dashboard/app.py
-   ```
-5. **Explore Notebooks**: Open `jupyter notebook` and navigate to the `notebooks/` directory to interact with the underlying code.
+### Local Installation
+1. **Clone the repository** and navigate to the directory.
+2. **Install dependencies**: `pip install -r requirements.txt`
+3. **Run Data Ingestion**: `python src/data/ingestion.py`
+4. **Launch Dashboard**: `streamlit run src/dashboard/app.py`
 
-### Option 2: Docker Deployment
-To run the entire dashboard inside an isolated container:
+### Docker Deployment
 ```bash
 docker build -t climate-economics-2050 .
 docker run -p 8501:8501 climate-economics-2050
 ```
-Then navigate to `http://localhost:8501` in your browser.
+
+## ☁️ Deployment (Vercel)
+While this project natively uses Streamlit, if you intend to deploy to **Vercel**, please note:
+> [!WARNING]
+> **Streamlit relies heavily on WebSockets**, which Vercel Serverless Functions do not support for persistent connections. Deploying Streamlit directly to Vercel will result in connection timeouts.
+
+**Recommended Alternatives**: 
+We highly recommend deploying via [Streamlit Community Cloud](https://streamlit.io/cloud) (Free) or **Render** for a smoother out-of-the-box experience.
+
+If you must use Vercel, you will need to decouple the UI into a framework like Next.js (Vercel native) and serve the Python forecasting models as a separate FastAPI backend on Vercel Serverless.
 
 ---
-
-## 📁 Repository Structure
-```text
-climate_economics_2050/
-├── data/
-│   └── processed/          # Generated global datasets
-├── docs/                   # Final Reports & Impact Analyses
-├── notebooks/
-│   ├── 02_exploratory_data_analysis.ipynb
-│   ├── 03_advanced_analytics_and_ml.ipynb
-│   └── 04_time_series_forecasting.ipynb
-├── src/
-│   ├── dashboard/
-│   │   └── app.py          # Streamlit UI
-│   └── data/
-│       └── ingestion.py    # Automated ETL pipeline
-├── Dockerfile              # Containerization
-└── requirements.txt        # Dependencies
-```
-
----
-
-## 🔬 Core Insights
-- **The Decoupling Challenge**: The XGBoost Feature Importance extraction mathematically proved that Primary Energy Consumption is the #1 driver of carbon emissions, fundamentally tied to GDP.
-- **The 2050 Forecast**: Without aggressive, compounding year-over-year policy interventions, business-as-usual trajectories forecast a continued, severe rise in global carbon output by 2050.
-
 *Designed for publication, academic presentation, and executive decision-making.*
